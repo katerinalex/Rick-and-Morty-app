@@ -5,7 +5,7 @@ import logo from '../../images/logo.png'
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
-type Character = {
+export type Character = {
   id:	number;
   name:	string;
   status:	string;
@@ -20,7 +20,7 @@ type Character = {
   created:	string;
 };
 
-type Episode = {
+export type Episode = {
   id:	number;
   name:	string;	
   air_date:	string;	
