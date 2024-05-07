@@ -1,0 +1,37 @@
+.menu {
+  padding: 40px;
+  border-bottom: solid black 3px;
+  &__container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    &__item {
+      display: inline-block;
+      padding: 10px;
+      text-decoration: none;
+      background-color: white;
+      color: black;
+
+      &--is-active {
+        background-color: black;
+        color: white;
+      }
+    }
+  }
+}
+
+.logo {
+  &__image {
+    height: 40px;
+    width: 40px;
+  }
+}

@@ -1,0 +1,46 @@
+.footer {
+  padding: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-top: solid black 3px;
+
+  &__basic-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    &__link {
+      color: black;
+
+      &:visited {
+        color: gray;
+      }
+
+      &:hover {
+        color: cadetblue;
+      }
+    }
+  }
+
+  &__tech-stack {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    &__link {
+      color: black;
+
+      &:visited {
+        color: gray;
+      }
+
+      &:hover {
+        color: darkred;
+      }
+    }
+  }
+}
