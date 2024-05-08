@@ -11,4 +11,12 @@
       margin: 20px 0;
     }
   }
+
+  &__filter {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
 }

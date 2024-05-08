@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Characters.scss';
 import axios from 'axios';
-import { Character } from '../Episodes';
+import { Character } from '../types/Character';
 import { Link } from 'react-router-dom';
 
 export const Characters: React.FC = () => {
@@ -13,16 +13,15 @@ export const Characters: React.FC = () => {
   const [gender, setGender] = useState<string>('');
   const [inputText, setInputText] = useState<string>('');
   useEffect(() => {
-    axios.get(`https://rickandmortyapi.com/api/character/?page=${page}&name=${name}&status=${status}`)
+    axios.get(`https://rickandmortyapi.com/api/character/?page=${page}&name=${name}&status=${status}&gender=${gender}`)
     .then((response) => {
       setCharacters(prev => [...prev, ...response.data.results]);
       setPagesCount(response.data.info.pages);
-      console.log(response.data);
     })
     .catch((error) => {
       console.error(error);
     });
-  },[name, page, status]);
+  },[name, page, status, gender]);
 
   const loadCharacters = () => {
     if (page < pagesCount) {
@@ -60,21 +59,14 @@ export const Characters: React.FC = () => {
             type="text" 
             id="inputText"
             value={inputText}
+            placeholder='Find character by name'
             onChange={e => {
-              setInputText(e.target.value);
               setCharacters([]);
+              setName(e.target.value.trim().toLocaleLowerCase());
+              setPage(1);
+              setInputText(e.target.value); 
             }}
           />
-          <Link 
-            className="main__list__button" 
-            to=''
-            onClick={() => {
-              setName(inputText.trim().toLocaleLowerCase());
-              setPage(1);
-            }}
-          >
-            Set name of character
-          </Link>
         </div>
 
         <div className="main__filter__status">

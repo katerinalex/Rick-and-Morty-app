@@ -8,40 +8,14 @@
   &__link {
     text-decoration: none;
     color: black;
-    font-weight: normal;
+    transition:
+      transform 2s,
+      color 2s;
 
     &:hover {
-      font-weight: bold;
+      transform: scale(1.1);
+      color: rgb(118, 118, 118);
     }
-  }
-
-  &__pagination {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-
-    &__item {
-      display: inline-block;
-      padding: 10px;
-      text-decoration: none;
-      background-color: white;
-      color: black;
-      font-weight: bold;
-
-      &--choosed {
-        background-color: black;
-        color: white;
-      }
-
-      &--disabled {
-        pointer-events: none;
-        background-color: white;
-        color: gray;
-      }
-    }
-
-
   }
 
   &__title {
@@ -56,12 +30,14 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
+    gap: 10px;
 
     &__item {
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
+      padding: 5px;
 
       &__image {
         height: 100px;
@@ -75,73 +51,6 @@
         align-items: flex-start;
         text-align: left;
       }
-    }
-  }
-
-  &__module {
-    width: 40%;
-    border: solid black 3px;
-    padding: 40px;
-    margin: 10px;
-    position: relative;
-
-    &__image {
-      width: 60%;
-    }
-
-    &__cross {
-      position: absolute;
-      right: 20px;
-      top: 20px;
-      background-image: url(../../images/cross.svg);
-      background-repeat: no-repeat;
-      background-size: cover;
-      height: 40px;
-      width: 40px;
-    }
-
-    &__info {
-      padding: 10px;
-      margin-bottom: 15px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: flex-start;
-      text-align: left;
-      border-bottom: solid black 2px;
-    }
-
-    &__characters {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-
-      &__item {
-        padding: 5px;
-        margin-bottom: 15px;
-        border-bottom: solid black 1px;
-        &__image {
-          @media (max-width: 800px) {
-            width: 80%;
-          }
-        }
-
-        &__info {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          align-items: center;
-        }
-      }
-    }
-
-    &__add-char {
-      display: inline-block;
-      padding: 10px;
-      text-decoration: none;
-      background-color: black;
-      color: white;
     }
   }
 }

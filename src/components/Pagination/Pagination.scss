@@ -1,0 +1,30 @@
+.main__pagination {
+  margin-bottom: 20px;
+  max-width: 350px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  &__item {
+    display: inline-block;
+    padding: 10px;
+    text-decoration: none;
+    background-color: white;
+    color: black;
+    font-weight: bold;
+
+    &--choosed {
+      background-color: black;
+      color: white;
+    }
+
+    &--disabled {
+      pointer-events: none;
+      background-color: white;
+      color: gray;
+    }
+  }
+
+
+}

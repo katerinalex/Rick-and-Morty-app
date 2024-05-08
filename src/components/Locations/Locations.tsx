@@ -3,43 +3,10 @@ import './Locations.scss';
 import axios from 'axios';
 import logo from '../../images/logo.png'
 import { Link } from 'react-router-dom';
-import classNames from 'classnames';
-
-export type Character = {
-  id:	number;
-  name:	string;
-  status:	string;
-  species:	string;
-  type:	string;
-  gender:	string;
-  origin:	object;
-  location:	object;
-  image:	string;
-  episode:	string[];
-  url:	string ;
-  created:	string;
-};
-
-export type Episode = {
-  id:	number;
-  name:	string;	
-  air_date:	string;	
-  episode:	string;
-  characters:	Character[];
-  url:	string;
-  created: string;
-}
-
-
-export type Location = {
-  id:	number;
-  name:	string;	
-  type:	string;
-  dimension:	string;
-  residents:	Character[];
-  url:	string;
-  created:	string;
-}
+import { Character } from '../types/Character';
+import { Location } from '../types/Location';
+import { Pagination } from '../Pagination';
+import { Modal } from '../Modal';
 
 export const Locations: React.FC = () => {
   const [locations, setLocations] = useState<Location[]>([]);
@@ -80,8 +47,7 @@ export const Locations: React.FC = () => {
           `
       }
     }).then((result) => {
-      setPageArr(Array.apply(null, Array(result.data.data.locations.info.pages)).map(function (y, i) { return i+1; }))
-      console.log(pageArr);
+      setPageArr(Array.apply(null, Array(result.data.data.locations.info.pages)).map(function (y, i) { return i+1; }));
       setLocations(result.data.data.locations.results);
     }).catch((error) => {
         console.error(error);
@@ -95,7 +61,6 @@ export const Locations: React.FC = () => {
     setChoosedLocation(ep);
 
     for (const ch of ep.residents) {
-      console.log(ch.name);
       if(ch.name.length) {
         axios({
           url: 'https://rickandmortyapi.graphcdn.app/',
@@ -140,49 +105,12 @@ export const Locations: React.FC = () => {
     <main className='main'>
       <div className="">
         <h1 className="main__title">Locations</h1>
-        <div className="main__pagination">
-          <Link 
-            className={classNames(
-              'main__pagination__item',
-              {'main__pagination__item--disabled': page === pageArr[0]}
-            )}
-            to=''
-            onClick={() => {
-              setPage(pageArr[0]);
-              closeModule();
-            }}
-          >
-            &lt;&lt;
-          </Link>
-          {pageArr.map(pg => (
-            <Link 
-              className={classNames(
-                'main__pagination__item',
-                {'main__pagination__item--choosed': page === pg}
-              )}
-              to=''
-              onClick={() => {
-                setPage(pg);
-                closeModule();
-              }}
-            >
-              {pg}
-            </Link>
-          ))}
-          <Link 
-            className={classNames(
-              'main__pagination__item',
-              {'main__pagination__item--disabled': page === pageArr[pageArr.length - 1]}
-            )} 
-            to=''
-            onClick={() => {
-              setPage(pageArr[pageArr.length - 1]);
-              closeModule();
-            }}
-          >
-            &gt;&gt;
-          </Link>
-        </div>
+        <Pagination 
+          setPage={(n: number) => setPage(n)} 
+          page={page} 
+          pageArr={pageArr}
+          closeModule={() => closeModule()}  
+        />
         <ul className="main__list">
           {locations && locations.map(location => (
             <Link 
@@ -205,52 +133,15 @@ export const Locations: React.FC = () => {
       </div>
 
       {choosedLocation && isLoadedModule && (
-        <div className="main__module">
-          <Link 
-            className="main__module__cross" 
-            to=''
-            onClick={() => closeModule()}
-          >
-          </Link>
-          <img src={logo} alt="" className="main__module__image"/>
-          <div className="main__module__info">
-            <span>{choosedLocation.id}. {choosedLocation.name}</span>
-            <span>Dimension: {choosedLocation.dimension}</span>
-            <span>Type: {choosedLocation.type}</span>
-          </div>
-          <div className="main__module__characters">
-            {!isAllCharacters && charactersFirstThree.map(character => (
-              <div className="main__module__characters__item" key={character.id}>
-                <img src={character.image} alt="" className="main__module__characters__item__image"/>
-                <div className="main__module__characters__item__info">
-                  <span>{character.name}</span>
-                  <span>Species: {character.species}</span>
-                  <span>Gender: {character.gender}</span>
-                </div>
-              </div>
-            ))}
-            {isAllCharacters && characters.map(character => (
-              <div className="main__module__characters__item" key={character.id}>
-                <img src={character.image} alt="" className="main__module__characters__item__image"/>
-                <div className="main__module__characters__item__info">
-                  <span>{character.name}</span>
-                  <span>Species: {character.species}</span>
-                  <span>Gender: {character.gender}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {!isAllCharacters && (
-            <Link 
-              className="main__module__add-char" 
-              to=''
-              onClick={() => setIsAllCharacters(true)}
-            >
-              Load more characters
-            </Link> 
-          )}
-        </div>
+        <Modal 
+          closeModule={closeModule} 
+          choosedLocation={choosedLocation}
+          charactersFirstThree={charactersFirstThree}
+          characters={characters}
+          isAllCharacters={isAllCharacters}
+          setIsAllCharacters={setIsAllCharacters}
+          choosedEpisode={null}
+        />
       )}
     </main>
   );
