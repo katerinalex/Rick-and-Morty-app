@@ -30,46 +30,40 @@ export type Episode = {
   created: string;
 }
 
-
-export type Location = {
-  id:	number;
-  name:	string;	
-  type:	string;
-  dimension:	string;
-  residents:	Character[];
-  url:	string;
-  created:	string;
-}
-
 export const Locations: React.FC = () => {
-  const [locations, setLocations] = useState<Location[]>([]);
+  const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [characters, setCharacters] = useState<Character[]>([]);
-  const [choosedLocation, setChoosedLocation] = useState<Location | null>(null);
+  const [choosedEpisode, setChoosedEpisode] = useState<Episode | null>(null);
   const [isAllCharacters, setIsAllCharacters] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
-  const isLoadedModule = useMemo(() => (choosedLocation?.residents.length || 0) === characters.length, [choosedLocation, characters]);
-  const charactersFirstThree = useMemo(() => characters.slice(0, 3), [characters]);
-  const [pageArr, setPageArr] = useState<number[]>([]);
+  const isLoadedModule = useMemo(() => (choosedEpisode?.characters.length || 0) === characters.length, [choosedEpisode, characters]);
+  const charactersFirstThree = useMemo(() => characters.slice(0, 3), [characters])
 
 
   useEffect(() => {
+    // axios.get(`https://rickandmortyapi.com/api/episode?page=${page}`)
+    // .then((response) => {
+    //   setEpisodes(response.data.results);
+    // })
+    // .catch((error) => {
+    //   console.error(error);
+    // });
     axios({
       url: 'https://rickandmortyapi.graphcdn.app/',
       method: 'post',
       data: {
         query: `
           query {
-            locations(page: ${page}) {
+            episodes(page: ${page}) {
               info {
                 count
-                pages
               }
               results {
                 id
                 name
-                type
-                dimension
-                residents {
+                air_date
+                episode
+                characters {
                   id
                   name
                 }
@@ -80,21 +74,23 @@ export const Locations: React.FC = () => {
           `
       }
     }).then((result) => {
-      setPageArr(Array.apply(null, Array(result.data.data.locations.info.pages)).map(function (y, i) { return i+1; }))
-      console.log(pageArr);
-      setLocations(result.data.data.locations.results);
+      setEpisodes(result.data.data.episodes.results);
     }).catch((error) => {
         console.error(error);
       });
   },[page]);
 
-  const chooseLocation = (ep: Location) => {
+  const chooseEpisode = (ep: Episode) => {
     setIsAllCharacters(false);
     setCharacters([]);
-    setChoosedLocation(null);
-    setChoosedLocation(ep);
+    setChoosedEpisode(null);
+    setChoosedEpisode(ep);
 
-    for (const ch of ep.residents) {
+
+    // console.log(ep);
+    // console.log(ep.characters);
+    for (const ch of ep.characters) {
+      // console.log(ep.characters);
       console.log(ch.name);
       if(ch.name.length) {
         axios({
@@ -133,50 +129,74 @@ export const Locations: React.FC = () => {
   const closeModule = () => {
     setIsAllCharacters(false);
     setCharacters([]);
-    setChoosedLocation(null);
+    setChoosedEpisode(null);
   };
 
   return (
     <main className='main'>
       <div className="">
-        <h1 className="main__title">Locations</h1>
+        <h1 className="main__title">Episodes</h1>
         <div className="main__pagination">
           <Link 
             className={classNames(
               'main__pagination__item',
-              {'main__pagination__item--disabled': page === pageArr[0]}
+              {'main__pagination__item--disabled': page === 1}
             )}
             to=''
             onClick={() => {
-              setPage(pageArr[0]);
+              setPage(1);
               closeModule();
             }}
           >
             &lt;&lt;
           </Link>
-          {pageArr.map(pg => (
-            <Link 
-              className={classNames(
-                'main__pagination__item',
-                {'main__pagination__item--choosed': page === pg}
-              )}
-              to=''
-              onClick={() => {
-                setPage(pg);
-                closeModule();
-              }}
-            >
-              {pg}
-            </Link>
-          ))}
           <Link 
             className={classNames(
               'main__pagination__item',
-              {'main__pagination__item--disabled': page === pageArr[pageArr.length - 1]}
+              {'main__pagination__item--choosed': page === 1}
+            )}
+            to=''
+            onClick={() => {
+              setPage(1);
+              closeModule();
+            }}
+          >
+            1
+          </Link>
+          <Link 
+            className={classNames(
+              'main__pagination__item',
+              {'main__pagination__item--choosed': page === 2}
+            )}
+            to=''
+            onClick={() => {
+              setPage(2);
+              closeModule();
+            }}
+          >
+            2
+          </Link>
+          <Link 
+            className={classNames(
+              'main__pagination__item',
+              {'main__pagination__item--choosed': page === 3}
+            )}
+            to=''
+            onClick={() => {
+              setPage(3);
+              closeModule();
+            }}
+          >
+            3
+          </Link>
+          <Link 
+            className={classNames(
+              'main__pagination__item',
+              {'main__pagination__item--disabled': page === 3}
             )} 
             to=''
             onClick={() => {
-              setPage(pageArr[pageArr.length - 1]);
+              setPage(3);
               closeModule();
             }}
           >
@@ -184,19 +204,19 @@ export const Locations: React.FC = () => {
           </Link>
         </div>
         <ul className="main__list">
-          {locations && locations.map(location => (
+          {episodes && episodes.map(episode => (
             <Link 
               className="main__link" 
               to='' 
-              key={location.id}
-              onClick={() => chooseLocation(location)}
+              key={episode.id}
+              onClick={() => chooseEpisode(episode)}
             >
               <li className="main__list__item">
                 <img src={logo} alt="" className="main__list__item__image"/>
                 <div className="main__list__item__info">
-                  <span>{location.id}. {location.name}</span>
-                  <span>Dimension: {location.dimension}</span>
-                  <span>Type: {location.type}</span>
+                  <span>{episode.id}. {episode.name}</span>
+                  <span>Episode: {episode.episode}</span>
+                  <span>Date: {episode.air_date}</span>
                 </div>
               </li>
             </Link>
@@ -204,7 +224,7 @@ export const Locations: React.FC = () => {
         </ul>
       </div>
 
-      {choosedLocation && isLoadedModule && (
+      {choosedEpisode && isLoadedModule && (
         <div className="main__module">
           <Link 
             className="main__module__cross" 
@@ -214,9 +234,9 @@ export const Locations: React.FC = () => {
           </Link>
           <img src={logo} alt="" className="main__module__image"/>
           <div className="main__module__info">
-            <span>{choosedLocation.id}. {choosedLocation.name}</span>
-            <span>Dimension: {choosedLocation.dimension}</span>
-            <span>Type: {choosedLocation.type}</span>
+            <span>{choosedEpisode.id}. {choosedEpisode.name}</span>
+            <span>Episode: {choosedEpisode.episode}</span>
+            <span>Date: {choosedEpisode.air_date}</span>
           </div>
           <div className="main__module__characters">
             {!isAllCharacters && charactersFirstThree.map(character => (
